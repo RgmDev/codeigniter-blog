@@ -9,7 +9,7 @@
         <small>2 days ago</small>
         <div class="d-flex">
           <div class="ms-1">
-            <a href="/posts/update/<?= esc($post['id'], 'url') ?>" class="text-warning">
+            <a href="/posts/update/<?= esc($post['id'], 'url') ?>" class="text-primary">
               <i class="bi bi-pencil-square"></i>
             </a>  
           </div>

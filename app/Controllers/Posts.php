@@ -38,16 +38,18 @@ class Posts extends BaseController
   {
     helper('form');
 
-    $data = ['title' => 'Nuevo artículo'];
+    $data = [
+      'title' => 'Nuevo artículo',
+      'formAction' => 'create'
+    ];
 
     if (!$this->request->is('post')) {
-      return $this->loadView('create', $data);
+      return $this->loadView('form', $data);
     }
 
     $post = $this->request->getPost(['title', 'content']);
-
     if (!$this->validateData($post, $this->validations)) {
-      return $this->loadView('create', $data);
+      return $this->loadView('form', $data);
     }
 
     $this->postsModel->save([
@@ -66,18 +68,19 @@ class Posts extends BaseController
 
     $data = [
       'title' => 'Editar artículo',
+      'formAction' => 'update/'.$postsId,
       'post' => $this->postsModel->getPostById($postsId)
     ];
     $this->validatePost($data['post']);
  
     if (!$this->request->is('post')) {
-      return $this->loadView('update', $data);
+      return $this->loadView('form', $data);
     }
 
     $post = $this->request->getPost(['title', 'content']);
 
     if (!$this->validateData($post, $this->validations)) {
-      return $this->loadView('update', $data);
+      return $this->loadView('form', $data);
     }
 
     $this->postsModel->save([

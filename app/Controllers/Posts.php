@@ -56,6 +56,7 @@ class Posts extends BaseController
       'slug' => url_title($post['title'], '-', true),
     ]);
 
+    $data['message'] = 'Artículo creado correctamente.';
     return $this->loadView('success', $data);
   }
 
@@ -86,6 +87,7 @@ class Posts extends BaseController
       'slug' => url_title($post['title'], '-', true)
     ]);
 
+    $data['message'] = 'Artículo actualizado correctamente.';
     return $this->loadView('success', $data);
   }
 
@@ -99,6 +101,7 @@ class Posts extends BaseController
 
     $this->postsModel->delete($postsId);
 
+    $data['message'] = 'Artículo eliminado correctamente.';
     return $this->loadView('success', $data);
   }
 

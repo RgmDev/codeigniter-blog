@@ -1,2 +1,2 @@
 
-<p><?= esc($post['content']) ?></p>
+<p><?= $post['content'] ?></p>

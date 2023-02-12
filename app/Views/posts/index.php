@@ -24,7 +24,7 @@
       <div class="card-body">
         <h5 class="card-title"><?= esc($post['title']) ?></h5>
         <h6 class="card-subtitle mb-2 text-muted">@Autor</h6>
-        <p class="card-text"><?= esc($post['content']) ?></p>
+        <p class="card-text"><?= $post['content'] ?></p>
         <a class="btn btn-primary btn-sm" href="/posts/<?= esc($post['slug'], 'url') ?>">Ver más</a>
       </div>
       

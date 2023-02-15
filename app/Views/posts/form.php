@@ -70,4 +70,5 @@
     </div>
 
     <input class="btn btn-primary" type="submit" name="submit" value="Aceptar">
+    <a href="/posts" class="btn btn-danger">Cancelar</a>
 </form>

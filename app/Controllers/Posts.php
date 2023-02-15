@@ -8,20 +8,41 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 class Posts extends BaseController
 {
 
+  protected $helpers = ['form'];
+
   public function __construct()
   {
     $this->postsModel = model('PostsModel');
-    $this->validations = [
-      'title' => 'required|max_length[255]|min_length[3]',
-      'content' => 'required|max_length[5000]|min_length[10]'
-    ];
+    $this->validation = \Config\Services::validation();
+    $this->validation->setRules(
+      [
+        'title' => [
+          'label'  => 'Título',
+          'rules'  => 'required|max_length[128]|min_length[3]',
+          'errors' => [
+            'required' => 'El campo {field} es obligatorio',
+            'max_length' => 'El campo {field} no puede tener más de 128 caracteres.',
+            'min_length' => 'El campo {field} no puede tener menos de 3 caracteres.'
+          ],
+        ],
+        'content' => [
+          'label'  => 'Contenido',
+          'rules'  => 'required',
+          'errors' => [
+            'required' => 'El campo {field} es obligatorio'
+          ],
+        ],
+      ]
+    );
   }
 
   public function index()
   {
+
     $data = [
       'title' => 'Lista de artículos',
-      'posts' => $this->postsModel->getPosts()
+      'posts' => $this->postsModel->paginate(2),
+      'pager' => $this->postsModel->pager,
     ];
     return $this->loadView('index', $data);
   }
@@ -36,8 +57,6 @@ class Posts extends BaseController
 
   public function create()
   {
-    helper('form');
-
     $data = [
       'title' => 'Nuevo artículo',
       'formAction' => 'create'
@@ -48,7 +67,8 @@ class Posts extends BaseController
     }
 
     $post = $this->request->getPost(['title', 'content']);
-    if (!$this->validateData($post, $this->validations)) {
+
+    if (!$this->validation->run($post)) {
       return $this->loadView('form', $data);
     }
 
@@ -64,13 +84,12 @@ class Posts extends BaseController
 
   public function update($postsId)
   {
-    helper('form');
-
     $data = [
       'title' => 'Editar artículo',
       'formAction' => 'update/'.$postsId,
       'post' => $this->postsModel->getPostById($postsId)
     ];
+
     $this->validatePost($data['post']);
  
     if (!$this->request->is('post')) {
@@ -79,7 +98,7 @@ class Posts extends BaseController
 
     $post = $this->request->getPost(['title', 'content']);
 
-    if (!$this->validateData($post, $this->validations)) {
+    if (!$this->validation->run($post)) {
       return $this->loadView('form', $data);
     }
 

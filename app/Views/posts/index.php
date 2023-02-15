@@ -2,6 +2,14 @@
 
 <?php if (! empty($posts) && is_array($posts)): ?>
 
+  <?php if ($pager) :?>
+  <?php $pagi_path='/posts'; ?>
+  <?php $pager->setPath($pagi_path); ?>
+  <?= $pager->links() ?>
+  <?php endif ?>
+  
+
+
   <?php foreach ($posts as $post): ?>
 
     <div class="card mb-3">

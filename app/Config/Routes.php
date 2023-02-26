@@ -33,12 +33,15 @@ $routes->set404Override();
 $routes->addRedirect('/', 'posts');
 
 use App\Controllers\Posts;
+use App\Controllers\Users;
 
 $routes->match(['get', 'post'], 'posts/create', [Posts::class, 'create']);
 $routes->match(['get', 'post'], 'posts/update/(:segment)', [Posts::class, 'update']);
 $routes->match(['get'], 'posts/delete/(:segment)', [Posts::class, 'delete']);
 $routes->get('posts/(:segment)', [Posts::class, 'view']);
 $routes->get('posts', [Posts::class, 'index']);
+$routes->match(['get', 'post'], 'users/login', [Users::class, 'login']);
+$routes->get('users/logout', [Users::class, 'logout']);
 
 /*
  * --------------------------------------------------------------------

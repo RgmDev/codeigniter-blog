@@ -8,8 +8,6 @@
   <?= $pager->links() ?>
   <?php endif ?>
   
-
-
   <?php foreach ($posts as $post): ?>
 
     <div class="card mb-3">

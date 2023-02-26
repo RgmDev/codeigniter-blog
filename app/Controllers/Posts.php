@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\PostsModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -34,42 +35,43 @@ class Posts extends BaseController
         ],
       ]
     );
+
+    $this->session = \Config\Services::session();
+    $this->data = [
+      'userData' => $this->session->get()
+    ];
   }
 
   public function index()
   {
 
-    $data = [
-      'title' => 'Lista de artículos',
-      'posts' => $this->postsModel->paginate(2),
-      'pager' => $this->postsModel->pager,
-    ];
-    return $this->loadView('index', $data);
+    $this->data['title'] = 'Lista de artículos';
+    $this->data['posts'] = $this->postsModel->paginate(2);
+    $this->data['pager'] = $this->postsModel->pager;
+    return $this->loadView('index', $this->data);
   }
 
   public function view($slug = null)
   {
-    $data['post'] = $this->postsModel->getPosts($slug);
-    $this->validatePost($data['post']);
-    $data['title'] = $data['post']['title'];
-    return $this->loadView('view', $data);
+    $this->data['post'] = $this->postsModel->getPosts($slug);
+    $this->validatePost($this->data['post']);
+    $this->data['title'] = $this->data['post']['title'];
+    return $this->loadView('view', $this->data);
   }
 
   public function create()
   {
-    $data = [
-      'title' => 'Nuevo artículo',
-      'formAction' => 'create'
-    ];
+    $this->data['title'] = 'Nuevo artículo';
+    $this->data['formAction'] = 'create';
 
     if (!$this->request->is('post')) {
-      return $this->loadView('form', $data);
+      return $this->loadView('form', $this->data);
     }
 
     $post = $this->request->getPost(['title', 'content']);
 
     if (!$this->validation->run($post)) {
-      return $this->loadView('form', $data);
+      return $this->loadView('form', $this->data);
     }
 
     $this->postsModel->save([
@@ -78,28 +80,25 @@ class Posts extends BaseController
       'slug' => url_title($post['title'], '-', true),
     ]);
 
-    $data['message'] = 'Artículo creado correctamente.';
-    return $this->loadView('success', $data);
+    $this->data['message'] = 'Artículo creado correctamente.';
+    return $this->loadView('success', $this->data);
   }
 
   public function update($postsId)
   {
-    $data = [
-      'title' => 'Editar artículo',
-      'formAction' => 'update/'.$postsId,
-      'post' => $this->postsModel->getPostById($postsId)
-    ];
-
-    $this->validatePost($data['post']);
+    $this->data['title'] = 'Editar artículo';
+    $this->data['formAction'] = 'update/'.$postsId;
+    $this->data['post'] = $this->postsModel->getPostById($postsId);
+    $this->validatePost($this->data['post']);
  
     if (!$this->request->is('post')) {
-      return $this->loadView('form', $data);
+      return $this->loadView('form', $this->data);
     }
 
     $post = $this->request->getPost(['title', 'content']);
 
     if (!$this->validation->run($post)) {
-      return $this->loadView('form', $data);
+      return $this->loadView('form', $this->data);
     }
 
     $this->postsModel->save([
@@ -109,22 +108,22 @@ class Posts extends BaseController
       'slug' => url_title($post['title'], '-', true)
     ]);
 
-    $data['message'] = 'Artículo actualizado correctamente.';
-    return $this->loadView('success', $data);
+    $this->data['message'] = 'Artículo actualizado correctamente.';
+    return $this->loadView('success', $this->data);
   }
 
   public function delete($postsId)
   {
-    $data = [
-      'title' => 'Eliminar artículo',
-      'post' => $this->postsModel->getPostById($postsId)
-    ];
-    $this->validatePost($data['post']);
+    
+    $this->data['title'] = 'Eliminar artículo';
+    $this->data['post'] = $this->postsModel->getPostById($postsId);
+
+    $this->validatePost($this->data['post']);
 
     $this->postsModel->delete($postsId);
 
-    $data['message'] = 'Artículo eliminado correctamente.';
-    return $this->loadView('success', $data);
+    $this->data['message'] = 'Artículo eliminado correctamente.';
+    return $this->loadView('success', $this->data);
   }
 
   private function validatePost($post) 
@@ -137,7 +136,7 @@ class Posts extends BaseController
   private function loadView($view, $data) 
   {
     return view('templates/header', $data)
-      .view('posts/'.$view)
+      .view('posts/' . $view)
       .view('templates/footer');
   }
 

@@ -41,6 +41,7 @@ $routes->match(['get'], 'posts/delete/(:segment)', [Posts::class, 'delete']);
 $routes->get('posts/(:segment)', [Posts::class, 'view']);
 $routes->get('posts', [Posts::class, 'index']);
 $routes->match(['get', 'post'], 'users/login', [Users::class, 'login']);
+$routes->match(['get', 'post'], 'users/register', [Users::class, 'register']);
 $routes->get('users/logout', [Users::class, 'logout']);
 
 /*

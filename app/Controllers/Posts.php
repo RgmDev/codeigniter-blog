@@ -15,27 +15,24 @@ class Posts extends BaseController
   {
     $this->postsModel = model('PostsModel');
     $this->validation = \Config\Services::validation();
-    $this->validation->setRules(
-      [
-        'title' => [
-          'label'  => 'Título',
-          'rules'  => 'required|max_length[128]|min_length[3]',
-          'errors' => [
-            'required' => 'El campo {field} es obligatorio',
-            'max_length' => 'El campo {field} no puede tener más de 128 caracteres.',
-            'min_length' => 'El campo {field} no puede tener menos de 3 caracteres.'
-          ],
+    $this->validation->setRules([
+      'title' => [
+        'label'  => 'Título',
+        'rules'  => 'required|max_length[128]|min_length[3]',
+        'errors' => [
+          'required' => 'El campo {field} es obligatorio',
+          'max_length' => 'El campo {field} no puede tener más de 128 caracteres.',
+          'min_length' => 'El campo {field} no puede tener menos de 3 caracteres.'
         ],
-        'content' => [
-          'label'  => 'Contenido',
-          'rules'  => 'required',
-          'errors' => [
-            'required' => 'El campo {field} es obligatorio'
-          ],
+      ],
+      'content' => [
+        'label'  => 'Contenido',
+        'rules'  => 'required',
+        'errors' => [
+          'required' => 'El campo {field} es obligatorio'
         ],
-      ]
-    );
-
+      ],
+    ]);
     $this->session = \Config\Services::session();
     $this->data = [
       'userData' => $this->session->get()
@@ -44,7 +41,6 @@ class Posts extends BaseController
 
   public function index()
   {
-
     $this->data['title'] = 'Lista de artículos';
     $this->data['posts'] = $this->postsModel->paginate(2);
     $this->data['pager'] = $this->postsModel->pager;

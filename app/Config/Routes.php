@@ -42,7 +42,11 @@ $routes->get('posts/(:segment)', [Posts::class, 'view']);
 $routes->get('posts', [Posts::class, 'index']);
 $routes->match(['get', 'post'], 'users/login', [Users::class, 'login']);
 $routes->match(['get', 'post'], 'users/register', [Users::class, 'register']);
+$routes->get('users/profile', [Users::class, 'profile']);
+$routes->post('users/upload_avatar', [Users::class, 'upload_avatar']);
 $routes->get('users/logout', [Users::class, 'logout']);
+
+
 
 /*
  * --------------------------------------------------------------------

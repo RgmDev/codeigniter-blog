@@ -1,0 +1,19 @@
+.mw-150 {
+  max-width: 150px;
+}
+
+.mw-300 {
+  max-width: 300px;
+}
+
+.mw-600 {
+  max-width: 600px;
+}
+
+#table-profile td {
+  width: 50%;
+}
+
+.img-nav {
+  width: 25px;
+}

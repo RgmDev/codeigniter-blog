@@ -32,6 +32,7 @@ $routes->set404Override();
 // $routes->get('/', 'Home::index');
 $routes->addRedirect('/', 'posts');
 
+use App\Controllers\Home;
 use App\Controllers\Posts;
 use App\Controllers\Users;
 
@@ -45,6 +46,8 @@ $routes->match(['get', 'post'], 'users/register', [Users::class, 'register']);
 $routes->get('users/profile', [Users::class, 'profile']);
 $routes->post('users/upload_avatar', [Users::class, 'upload_avatar']);
 $routes->get('users/logout', [Users::class, 'logout']);
+
+$routes->get('phpinfo', [Home::class, 'phpinfo']);
 
 
 

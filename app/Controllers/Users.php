@@ -124,7 +124,7 @@ class Users extends BaseController
                     'uploaded[userfile]',
                     'is_image[userfile]',
                     'mime_in[userfile,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                    'max_size[userfile,100]',
+                    'max_size[userfile,1000]',
                     'max_dims[userfile,1024,768]',
                 ],
             ],
@@ -139,28 +139,34 @@ class Users extends BaseController
         $fileNameParts = explode('.', $img->getName());
         $ext = end($fileNameParts);
 
-        $filename = $this->data['userData']['id'].'.'.$ext;
+        $filename = $this->data['userData']['id'] . '.' . $ext;
         $pathfile = ROOTPATH . 'public/uploads/' . $filename;
         if (file_exists($pathfile)) { 
             unlink($pathfile);
         }
+
+        $thumb = \Config\Services::image()
+            ->withFile($img)
+            ->resize(100, 100, true, 'height')
+            ->save(ROOTPATH . 'public/thumbnails/' . $filename);
+
         $img->move(ROOTPATH . 'public/uploads/', $filename);
+
         $this->usersModel->save([
             'id' => $this->data['userData']['id'],
             'avatar' => $filename
         ]);
-        $this->session->set(['avatar' => "/uploads/" . $filename]);
-        $this->data['userData']['avatar'] = "/uploads/" . $filename;
+        $this->session->set(['avatar' => "/thumbnails/" . $filename]);
+        $this->data['userData']['avatar'] = "/thumbnails/" . $filename;
 
         return redirect()->to(base_url() . '/users/profile');
-        // return $this->loadView('profile', $this->data);
     }
 
     public function logout() 
     {
         $this->session->destroy();
         return redirect()->to(base_url());
-    } 
+    }
 
     private function loadView($view, $data) 
     {

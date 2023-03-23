@@ -8,7 +8,7 @@ class PostsModel extends Model
 {
   protected $table = 'posts';
   protected $primaryKey = 'id';
-  protected $allowedFields = ['title', 'content', 'slug'];
+  protected $allowedFields = ['title', 'content', 'slug', 'userId'];
 
   public function getPosts($slug = false)
   {

@@ -41,11 +41,14 @@ $routes->match(['get', 'post'], 'posts/update/(:segment)', [Posts::class, 'updat
 $routes->match(['get'], 'posts/delete/(:segment)', [Posts::class, 'delete']);
 $routes->get('posts/(:segment)', [Posts::class, 'view']);
 $routes->get('posts', [Posts::class, 'index']);
+
 $routes->match(['get', 'post'], 'users/login', [Users::class, 'login']);
 $routes->match(['get', 'post'], 'users/register', [Users::class, 'register']);
 $routes->get('users/profile', [Users::class, 'profile']);
 $routes->post('users/upload_avatar', [Users::class, 'upload_avatar']);
 $routes->get('users/logout', [Users::class, 'logout']);
+
+$routes->post('comments/create', [Post::class, 'comment']);
 
 $routes->get('phpinfo', [Home::class, 'phpinfo']);
 

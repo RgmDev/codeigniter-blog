@@ -13,9 +13,9 @@ class PostsModel extends Model
   public function getPosts($slug = false)
   {
     if ($slug === false) {
-      return $this->findAll();
+      return $this->join('users as u', 'posts.userId = u.id')->paginate(2);
     }
-    return $this->where(['slug' => $slug])->first();
+    return $this->join('users as u', 'posts.userId = u.id')->where(['slug' => $slug])->first();
   }
 
   public function getPostById($postId = false)

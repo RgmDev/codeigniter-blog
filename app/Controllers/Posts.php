@@ -35,14 +35,14 @@ class Posts extends BaseController
         ]);
         $this->session = \Config\Services::session();
         $this->data = [
-        'userData' => $this->session->get()
+            'userData' => $this->session->get()
         ];
     }
 
     public function index()
     {
         $this->data['title'] = 'Lista de artículos';
-        $this->data['posts'] = $this->postsModel->paginate(2);
+        $this->data['posts'] = $this->postsModel->getPosts();
         $this->data['pager'] = $this->postsModel->pager;
         return $this->loadView('index', $this->data);
     }
@@ -57,7 +57,6 @@ class Posts extends BaseController
 
     public function create()
     {
-
         $this->data['title'] = 'Nuevo artículo';
         $this->data['formAction'] = 'create';
 
@@ -124,6 +123,11 @@ class Posts extends BaseController
 
         $this->data['message'] = 'Artículo eliminado correctamente.';
         return $this->loadView('success', $this->data);
+    }
+
+    public function comment()
+    {
+        return 'hello';
     }
 
     private function validatePost($post)

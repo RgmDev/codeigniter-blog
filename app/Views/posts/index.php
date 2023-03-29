@@ -11,10 +11,9 @@
   <?php endif ?>
   
   <?php foreach ($posts as $post): ?>
-
     <div class="card mb-3">
       <div class="card-header text-muted d-flex justify-content-between">
-        <small>2 days ago</small>
+        <small><?= esc($post['date']) ?></small>
         
         <div class="d-flex">
 
@@ -36,7 +35,7 @@
       </div>
       <div class="card-body">
         <h5 class="card-title"><?= esc($post['title']) ?></h5>
-        <h6 class="card-subtitle mb-2 text-muted">@Autor</h6>
+        <h6 class="card-subtitle mb-2 text-muted">@<?= esc($post['name'] . ' ' . $post['surname']) ?></h6>
         <p class="card-text"><?= $post['content'] ?></p>
         <a class="btn btn-primary btn-sm" href="/posts/<?= esc($post['slug'], 'url') ?>">Ver más</a>
       </div>

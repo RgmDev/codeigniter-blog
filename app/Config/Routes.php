@@ -48,7 +48,7 @@ $routes->get('users/profile', [Users::class, 'profile']);
 $routes->post('users/upload_avatar', [Users::class, 'upload_avatar']);
 $routes->get('users/logout', [Users::class, 'logout']);
 
-$routes->post('comments/create', [Post::class, 'comment']);
+$routes->post('comments/create', [Posts::class, 'comment']);
 
 $routes->get('phpinfo', [Home::class, 'phpinfo']);
 

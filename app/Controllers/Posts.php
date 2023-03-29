@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PostsModel;
+use App\Models\CommentsModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Posts extends BaseController
@@ -14,6 +15,7 @@ class Posts extends BaseController
     public function __construct()
     {
         $this->postsModel = model('PostsModel');
+        $this->commentsModel = model('CommentsModel');
         $this->validation = \Config\Services::validation();
         $this->validation->setRules([
         'title' => [
@@ -52,6 +54,7 @@ class Posts extends BaseController
         $this->data['post'] = $this->postsModel->getPosts($slug);
         $this->validatePost($this->data['post']);
         $this->data['title'] = $this->data['post']['title'];
+        $this->data['comments'] = $this->postsModel->getComments($slug);
         return $this->loadView('view', $this->data);
     }
 
@@ -127,7 +130,14 @@ class Posts extends BaseController
 
     public function comment()
     {
-        return 'hello';
+        $post = $this->request->getPost(['postId', 'userId', 'slug', 'comment']);
+        $newComment = [
+          'postId' => $post['postId'],
+          'userId' => $this->data['userData']['id'],
+          'text' => $post['comment']
+        ];
+        $this->commentsModel->save($newComment);
+        return redirect()->to(base_url() . "/posts/" . $post['slug']);
     }
 
     private function validatePost($post)

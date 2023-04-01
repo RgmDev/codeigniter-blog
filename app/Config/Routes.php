@@ -39,9 +39,9 @@ use App\Controllers\Users;
 $routes->match(['get', 'post'], 'posts/create', [Posts::class, 'create']);
 $routes->match(['get', 'post'], 'posts/update/(:segment)', [Posts::class, 'update']);
 $routes->match(['get'], 'posts/delete/(:segment)', [Posts::class, 'delete']);
-// $routes->get('posts/(:segment)', [Posts::class, 'view']);
 $routes->match(['get', 'post'], 'posts/(:segment)', [Posts::class, 'view']);
 $routes->get('posts', [Posts::class, 'index']);
+$routes->get('calendar', [Posts::class, 'calendar']);
 
 $routes->match(['get', 'post'], 'users/login', [Users::class, 'login']);
 $routes->match(['get', 'post'], 'users/register', [Users::class, 'register']);

@@ -89,6 +89,13 @@ class Posts extends BaseController
         return redirect()->to(base_url() . "/posts/" . $slug);
     }
 
+    public function calendar()
+    {
+        $this->data['posts'] = $this->postsModel->getPosts(false, false);
+        $this->data['title'] = 'Calendario de artículos';
+        return $this->loadView('calendar', $this->data);
+    }
+
     public function create()
     {
         $this->data['title'] = 'Nuevo artículo';

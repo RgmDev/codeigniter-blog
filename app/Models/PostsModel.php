@@ -10,12 +10,13 @@ class PostsModel extends Model
   protected $primaryKey = 'id';
   protected $allowedFields = ['title', 'content', 'slug', 'userId'];
 
-  public function getPosts($slug = false)
+  public function getPosts($slug = false, $paginate = true)
   {
+    $this->select('posts.*, u.name, u.surname')->join('users as u', 'posts.userId = u.id');
     if ($slug === false) {
-      return $this->select('posts.*, u.name, u.surname')->join('users as u', 'posts.userId = u.id')->paginate(2);
+      return $paginate ? $this->paginate(5) : $this->findAll();
     }
-    return $this->select('posts.*, u.name, u.surname')->join('users as u', 'posts.userId = u.id')->where(['slug' => $slug])->first();
+    return $this->where(['slug' => $slug])->first();
   }
 
   public function getPostById($postId = false)

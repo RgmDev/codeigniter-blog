@@ -27,6 +27,9 @@
             <a class="nav-link" aria-current="page" href="/posts">Posts</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/calendar">Calendario</a>
+          </li>
+          <li class="nav-item">
               <a class="nav-link" aria-current="page" href="/users/register">Registro</a>
             </li>
           <?php if (! empty($userData['id']) ): ?>

@@ -10,7 +10,7 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 class Posts extends BaseController
 {
 
-    protected $helpers = ['form'];
+    protected $helpers = ['form', 'reCaptcha'];
 
     public function __construct()
     {
@@ -18,22 +18,35 @@ class Posts extends BaseController
         $this->commentsModel = model('CommentsModel');
         $this->validation = \Config\Services::validation();
         $this->validation->setRules([
-        'title' => [
-        'label'  => 'Título',
-        'rules'  => 'required|max_length[128]|min_length[3]',
-        'errors' => [
-          'required' => 'El campo {field} es obligatorio',
-          'max_length' => 'El campo {field} no puede tener más de 128 caracteres.',
-          'min_length' => 'El campo {field} no puede tener menos de 3 caracteres.'
-        ],
-        ],
-        'content' => [
-        'label'  => 'Contenido',
-        'rules'  => 'required',
-        'errors' => [
-          'required' => 'El campo {field} es obligatorio'
-        ],
-        ],
+            'title' => [
+                'label'  => 'Título',
+                'rules'  => 'required|max_length[128]|min_length[3]',
+                'errors' => [
+                    'required' => 'El campo {field} es obligatorio',
+                    'max_length' => 'El campo {field} no puede tener más de 128 caracteres.',
+                    'min_length' => 'El campo {field} no puede tener menos de 3 caracteres.'
+                ],
+            ],
+            'content' => [
+                'label'  => 'Contenido',
+                'rules'  => 'required',
+                'errors' => [
+                    'required' => 'El campo {field} es obligatorio'
+                ],
+            ],
+        ]);
+        $this->validationComment = \Config\Services::validation();
+        $this->validationComment->setRules([
+            'comment' => [
+                'label'  => 'Comentario',
+                'rules'  => 'required|max_length[128]|min_length[3]',
+                'errors' => [
+                    'required' => 'El campo {field} es obligatorio',
+                    'max_length' => 'El campo {field} no puede tener más de 128 caracteres.',
+                    'min_length' => 'El campo {field} no puede tener menos de 3 caracteres.'
+                ],
+            ],
+            'reCaptcha2' => 'required|reCaptcha2[]'
         ]);
         $this->session = \Config\Services::session();
         $this->data = [
@@ -51,11 +64,29 @@ class Posts extends BaseController
 
     public function view($slug = null)
     {
+
         $this->data['post'] = $this->postsModel->getPosts($slug);
         $this->validatePost($this->data['post']);
         $this->data['title'] = $this->data['post']['title'];
         $this->data['comments'] = $this->postsModel->getComments($slug);
-        return $this->loadView('view', $this->data);
+        $this->data['recaptcha'] = reCaptcha2('reCaptcha2', ['id' => 'recaptcha_v2']);
+
+        if (!$this->request->is('post')) {
+            return $this->loadView('view', $this->data);
+        }
+
+        $post = $this->request->getPost(['postId', 'userId', 'slug', 'comment', 'reCaptcha2']);
+        if (!$this->validationComment->run($post)) {
+            return $this->loadView('view', $this->data);
+        }
+
+        $newComment = [
+            'postId' => $post['postId'],
+            'userId' => $this->data['userData']['id'],
+            'text' => $post['comment']
+        ];
+        $this->commentsModel->save($newComment);
+        return redirect()->to(base_url() . "/posts/" . $slug);
     }
 
     public function create()
@@ -126,18 +157,6 @@ class Posts extends BaseController
 
         $this->data['message'] = 'Artículo eliminado correctamente.';
         return $this->loadView('success', $this->data);
-    }
-
-    public function comment()
-    {
-        $post = $this->request->getPost(['postId', 'userId', 'slug', 'comment']);
-        $newComment = [
-          'postId' => $post['postId'],
-          'userId' => $this->data['userData']['id'],
-          'text' => $post['comment']
-        ];
-        $this->commentsModel->save($newComment);
-        return redirect()->to(base_url() . "/posts/" . $post['slug']);
     }
 
     private function validatePost($post)
